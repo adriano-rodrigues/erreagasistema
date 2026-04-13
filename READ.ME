@@ -1,0 +1,149 @@
+ErreagaSistema
+Sistema de Folha de Pagamento em Java, desenvolvido para aplicar conceitos fundamentais da linguagem e boas práticas de arquitetura orientada a objetos (SOLID).
+
+📌 Objetivo
+Permitir o cadastro de colaboradores e o cálculo do salário final de acordo com o tipo de vínculo:
+
+Funcionário Padrão → salário base.
+
+Funcionário Comissionado → salário base + comissão.
+
+Funcionário de Produção → salário base + bônus por produtividade.
+
+🏗 Estrutura de Pacotes
+Código
+br.com.erreagasistema
+│
+├── config        # Constantes globais
+├── model         # Classes de domínio (Colaborador e subclasses)
+├── service       # Regras de negócio (FolhaService)
+├── util          # Utilitários (ValidadorEntrada)
+└── app           # Classe principal (FolhaPagamentoApp)
+📊 Fluxograma do Menu Interativo
+mermaid
+flowchart TD
+    A[Início do Sistema] --> B[Exibir Menu]
+    B --> C[1 - Cadastrar Funcionário Padrão]
+    B --> D[2 - Cadastrar Funcionário Comissionado]
+    B --> E[3 - Cadastrar Funcionário Produção]
+    B --> F[4 - Listar Folha]
+    B --> G[Outra opção]
+
+    C --> H[Cadastrar dados do Funcionário Padrão]
+    D --> I[Cadastrar dados do Funcionário Comissionado]
+    E --> J[Cadastrar dados do Funcionário Produção]
+    F --> K[Exibir lista de colaboradores e salários]
+    G --> L[Mensagem: Opção não implementada]
+
+    H --> B
+    I --> B
+    J --> B
+    K --> B
+    L --> B
+📊 Fluxograma do Menu Interativo (com fluxos alternativos)
+mermaid
+flowchart TD
+    A[Início do Sistema] --> B[Exibir Menu]
+    B --> C[1 - Cadastrar Funcionário Padrão]
+    B --> D[2 - Cadastrar Funcionário Comissionado]
+    B --> E[3 - Cadastrar Funcionário Produção]
+    B --> F[4 - Listar Folha]
+    B --> G[Outra opção]
+
+    C --> H[Cadastrar dados do Funcionário Padrão]
+    D --> I[Cadastrar dados do Funcionário Comissionado]
+    E --> J[Cadastrar dados do Funcionário Produção]
+    F --> K[Exibir lista de colaboradores e salários]
+    G --> L[Mensagem: Opção não implementada]
+
+    %% Fluxos alternativos de erro
+    H --> M[Erro: Nome inválido] --> B
+    I --> N[Erro: Vendas/Percentual inválido] --> B
+    J --> O[Erro: Registro/Valor/Quantidade inválidos] --> B
+    F --> P[Erro: Nenhum colaborador cadastrado] --> B
+
+    H --> B
+    I --> B
+    J --> B
+    K --> B
+    L --> B
+📌 Cenários de Erro Não Implementados
+Opção inválida no menu → mensagem “Opção não implementada”.
+
+Registro inválido → texto não numérico ou número negativo.
+
+Nome inválido → nulo ou vazio.
+
+Valor por peça inválido → não numérico ou negativo.
+
+Quantidade inválida → não numérica ou negativa.
+
+Percentual inválido → menor que 0 ou maior que 100.
+
+Folha vazia → tentativa de listar sem colaboradores cadastrados.
+📊 Diagrama UML
+mermaid
+classDiagram
+    Calculavel <|.. Colaborador
+    Colaborador <|-- FuncionarioPadrao
+    Colaborador <|-- FuncionarioComissionado
+    Colaborador <|-- FuncionarioProducao
+
+    class Calculavel {
+        +calcularSalario() double
+    }
+
+    class Colaborador {
+        -int registro
+        -String nome
+        +getRegistro() int
+        +getNome() String
+        +calcularSalario() double
+    }
+
+    class FuncionarioPadrao {
+        +calcularSalario() double
+    }
+
+    class FuncionarioComissionado {
+        -double vendas
+        -double percentual
+        +calcularSalario() double
+    }
+
+    class FuncionarioProducao {
+        -double valorPorPeca
+        -int quantidade
+        +calcularSalario() double
+    }
+
+    class FolhaService {
+        -List<Calculavel> colaboradores
+        +adicionarColaborador(Calculavel)
+        +listarFolha()
+        +getColaboradores() List<Calculavel>
+    }
+
+    Colaborador --> FolhaService : usado por
+🚀 Tecnologias
+Java 17+
+
+Maven
+
+JUnit 4
+
+JaCoCo (cobertura de testes)
+
+⚙️ Como rodar
+bash
+git clone https://github.com/seuusuario/erreagasistema.git
+cd erreagasistema
+mvn clean install
+mvn exec:java -Dexec.mainClass=br.com.erreagasistema.app.FolhaPagamentoApp
+🧪 Testes Automatizados
+bash
+mvn test
+Relatório de cobertura:
+
+Código
+target/site/jacoco/index.html
